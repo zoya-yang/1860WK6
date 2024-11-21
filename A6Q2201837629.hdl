@@ -3,47 +3,27 @@ CHIP A6Q2201837629 {
     OUT f;
 
     PARTS:
-    Not(in=a, out=nota);
-    Not(in=b, out=notb);
-    Not(in=c, out=notc);
-    Not(in=d, out=notd);
+    // Step 1: Negate inputs
+    NOT(in=a, out=notA);
+    NOT(in=b, out=notB);
+    NOT(in=c, out=notC);
+    NOT(in=d, out=notD);
 
-    // Term 1: (~a ∧ ~b ∧ ~c ∧ ~d)
-    And(a=nota, b=notb, out=and1);
-    And(a=and1, b=notc, out=and2);
-    And(a=and2, b=notd, out=term1);
+    // Step 2: Compute intermediate terms
+    AND(a=notA, b=d, out=term1);     // ¬a ∧ d
+    AND(a=notA, b=c, out=term2);     // ¬a ∧ c
+    AND(a=a, b=d, out=term3);        // a ∧ d
+    AND(a=a, b=c, out=term4);        // a ∧ c
+    OR(a=term1, b=term2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
+    OR(a=term3, b=term4, out=part2); // a ∧ d ∨ a ∧ c
+    OR(a=part1, b=part2, out=part3); // Combine all (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
+    AND(a=notB, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
 
-    // Term 2: (~a ∧ ~b ∧ c ∧ d)
-    And(a=nota, b=notb, out=and3);
-    And(a=and3, b=c, out=and4);
-    And(a=and4, b=d, out=term2);
+    // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
+    AND(a=a, b=b, out=ab);
+    AND(a=ab, b=notC, out=abc);
+    AND(a=abc, b=notD, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
 
-    // Term 3: (~a ∧ b ∧ ~c ∧ ~d)
-    And(a=nota, b=b, out=and5);
-    And(a=and5, b=notc, out=and6);
-    And(a=and6, b=notd, out=term3);
-
-    // Term 4: (~a ∧ b ∧ c ∧ d)
-    And(a=nota, b=b, out=and7);
-    And(a=and7, b=c, out=and8);
-    And(a=and8, b=d, out=term4);
-
-    // Combine terms 1-4
-    Or(a=term1, b=term2, out=or1);
-    Or(a=term3, b=term4, out=or2);
-    Or(a=or1, b=or2, out=part1);
-
-    // Term 5: (a ∧ ~b ∧ ~c ∧ ~d)
-    And(a=a, b=notb, out=and9);
-    And(a=and9, b=notc, out=and10);
-    And(a=and10, b=notd, out=term5);
-
-    // Term 6: (a ∧ b ∧ c ∧ ~d)
-    And(a=a, b=b, out=and11);
-    And(a=and11, b=c, out=and12);
-    And(a=and12, b=notd, out=term6);
-
-    // Combine terms 5 and 6, then all parts
-    Or(a=term5, b=term6, out=part2);
-    Or(a=part1, b=part2, out=f);
+    // Step 4: Combine results
+    OR(a=part4, b=term5, out=f);    // Final output: f = part4 ∨ term5
 }
