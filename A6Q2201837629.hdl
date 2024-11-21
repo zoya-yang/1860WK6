@@ -1,29 +1,31 @@
 CHIP A6Q2201837629 {
     IN a, b, c, d;
-    OUT f;
+    OUT f, debug_term1, debug_term2, debug_term3, debug_part1, debug_part2;
 
     PARTS:
     // Step 1: Negate inputs
-    Not(in=a, out=Nota);
-    Not(in=b, out=Notb);
-    Not(in=c, out=Notc);
-    Not(in=d, out=Notd);
+    NOT(in=a, out=Nota);
+    NOT(in=b, out=Notb);
+    NOT(in=c, out=Notc);
+    NOT(in=d, out=Notd);
 
     // Step 2: Compute intermediate terms
-    And(a=Nota, b=d, out=And1);     // ¬a ∧ d
-    And(a=Nota, b=c, out=And2);     // ¬a ∧ c
-    And(a=a, b=d, out=And3);        // a ∧ d
-    And(a=a, b=c, out=And4);        // a ∧ c
-    Or(a=And1, b=And2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
-    Or(a=And3, b=And4, out=part2); // a ∧ d ∨ a ∧ c
-    Or(a=part1, b=part2, out=part3); // Combine all (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
-    And(a=Notb, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
+    AND(a=Nota, b=d, out=debug_term1);     // ¬a ∧ d
+    AND(a=Nota, b=c, out=debug_term2);     // ¬a ∧ c
+    AND(a=a, b=d, out=debug_term3);        // a ∧ d
+    AND(a=a, b=c, out=term4);              // a ∧ c
+
+    OR(a=debug_term1, b=debug_term2, out=debug_part1); // ¬a ∧ d ∨ ¬a ∧ c
+    OR(a=debug_term3, b=term4, out=debug_part2);       // a ∧ d ∨ a ∧ c
+
+    OR(a=debug_part1, b=debug_part2, out=partial3);    // Combine all intermediate results
+    AND(a=Notb, b=partial3, out=part4);                // ¬b ∧ (...)
 
     // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
-    And(a=a, b=b, out=And5);
-    And(a=And5, b=Notc, out=And6);
-    And(a=And6, b=Notd, out=And7); // a ∧ b ∧ ¬c ∧ ¬d
+    AND(a=a, b=b, out=ab);
+    AND(a=ab, b=Notc, out=abc);
+    AND(a=abc, b=Notd, out=term5);                     // a ∧ b ∧ ¬c ∧ ¬d
 
     // Step 4: Combine results
-    Or(a=part4, b=And7, out=f);    // Final output: f = part4 ∨ And7
+    OR(a=part4, b=term5, out=f);                       // Final output
 }
