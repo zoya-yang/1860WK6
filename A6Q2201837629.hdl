@@ -10,20 +10,20 @@ CHIP A6Q2201837629 {
     Not(in=d, out=Notd);
 
     // Step 2: Compute intermediate terms
-    And(a=Nota, b=d, out=term1);     // ¬a ∧ d
-    And(a=Nota, b=c, out=term2);     // ¬a ∧ c
-    And(a=a, b=d, out=term3);        // a ∧ d
-    And(a=a, b=c, out=term4);        // a ∧ c
-    Or(a=term1, b=term2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
-    Or(a=term3, b=term4, out=part2); // a ∧ d ∨ a ∧ c
+    And(a=Nota, b=d, out=And1);     // ¬a ∧ d
+    And(a=Nota, b=c, out=And2);     // ¬a ∧ c
+    And(a=a, b=d, out=And3);        // a ∧ d
+    And(a=a, b=c, out=And4);        // a ∧ c
+    Or(a=And1, b=And2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
+    Or(a=And3, b=And4, out=part2); // a ∧ d ∨ a ∧ c
     Or(a=part1, b=part2, out=part3); // Combine all (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
     And(a=Notb, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
 
     // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
-    And(a=a, b=b, out=And1);
-    And(a=And1, b=Notc, out=And2);
-    And(a=And2, b=Notd, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
+    And(a=a, b=b, out=And5);
+    And(a=And5, b=Notc, out=And6);
+    And(a=And6, b=Notd, out=And7); // a ∧ b ∧ ¬c ∧ ¬d
 
     // Step 4: Combine results
-    Or(a=part4, b=term5, out=f);    // Final output: f = part4 ∨ term5
+    Or(a=part4, b=And7, out=f);    // Final output: f = part4 ∨ term5
 }
