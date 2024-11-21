@@ -25,5 +25,5 @@ CHIP A6Q2201837629 {
     And(a=And6, b=Notd, out=And7); // a ∧ b ∧ ¬c ∧ ¬d
 
     // Step 4: Combine results
-    Or(a=part4, b=And7, out=f);    // Final output: f = part4 ∨ term5
+    Or(a=part4, b=And7, out=f);    // Final output: f = part4 ∨ And7
 }
