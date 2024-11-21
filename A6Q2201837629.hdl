@@ -4,25 +4,25 @@ CHIP A6Q2201837629 {
 
     PARTS:
     // Step 1: Negate inputs
-    Not(in=a, out=NotA);
-    Not(in=b, out=NotB);
-    Not(in=c, out=NotC);
-    Not(in=d, out=NotD);
+    Not(in=a, out=Nota);
+    Not(in=b, out=Notb);
+    Not(in=c, out=Notc);
+    Not(in=d, out=Notd);
 
     // Step 2: Compute intermediate terms
-    And(a=notA, b=d, out=term1);     // ¬a ∧ d
-    And(a=notA, b=c, out=term2);     // ¬a ∧ c
+    And(a=NotA, b=d, out=term1);     // ¬a ∧ d
+    And(a=NotA, b=c, out=term2);     // ¬a ∧ c
     And(a=a, b=d, out=term3);        // a ∧ d
     And(a=a, b=c, out=term4);        // a ∧ c
     Or(a=term1, b=term2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
     Or(a=term3, b=term4, out=part2); // a ∧ d ∨ a ∧ c
     Or(a=part1, b=part2, out=part3); // Combine all (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
-    And(a=notB, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
+    And(a=NotB, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
 
     // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
     And(a=a, b=b, out=ab);
-    And(a=ab, b=NotC, out=abc);
-    And(a=abc, b=NotD, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
+    And(a=ab, b=Notc, out=abc);
+    And(a=abc, b=Notd, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
 
     // Step 4: Combine results
     Or(a=part4, b=term5, out=f);    // Final output: f = part4 ∨ term5
