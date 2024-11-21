@@ -20,9 +20,9 @@ CHIP A6Q2201837629 {
     And(a=Notb, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
 
     // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
-    And(a=a, b=b, out=ab);
-    And(a=ab, b=Notc, out=abc);
-    And(a=abc, b=Notd, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
+    And(a=a, b=b, out=And1);
+    And(a=And1, b=Notc, out=And2);
+    And(a=And2, b=Notd, out=term5); // a ∧ b ∧ ¬c ∧ ¬d
 
     // Step 4: Combine results
     Or(a=part4, b=term5, out=f);    // Final output: f = part4 ∨ term5
