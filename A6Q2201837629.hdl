@@ -11,7 +11,7 @@ CHIP A6Q2201837629 {
 
     // AND gates for each minterm
     // Minterm 1: ¬a ∧ ¬b ∧ ¬c ∧ d
-    And(a=NotA, b=NotB, out=PartialM1_1);
+    And(a=NotA, b=NotB, out=PartialM1_1)
     And(a=PartialM1_1, b=NotC, out=PartialM1_2);
     And(a=PartialM1_2, b=d, out=M1);
 
