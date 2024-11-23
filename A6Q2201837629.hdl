@@ -1,5 +1,5 @@
 CHIP A6Q2201837629 {
-    IN a, b, c, d;  // Inputs: 4-bit binary
+    IN a, b, c, d;  // Inputs: 4-bit binary variables
     OUT f;          // Output: Boolean function f
 
     PARTS:
@@ -10,19 +10,19 @@ CHIP A6Q2201837629 {
     Not(in=d, out=NotD);
 
     // AND gates for each term
-    // Term 1: ¬a ∧ ¬b ∧ d
+    // Term 1: A'B'D
     And(a=NotA, b=NotB, out=Term1_Part1);
     And(a=Term1_Part1, b=d, out=Term1);
 
-    // Term 2: ¬b ∧ c ∧ ¬d
-    And(a=NotB, b=c, out=Term2_Part1);
-    And(a=Term2_Part1, b=NotD, out=Term2);
+    // Term 2: B'C'D
+    And(a=NotB, b=NotC, out=Term2_Part1);
+    And(a=Term2_Part1, b=d, out=Term2);
 
-    // Term 3: ¬b ∧ c ∧ d
+    // Term 3: B'CD'
     And(a=NotB, b=c, out=Term3_Part1);
-    And(a=Term3_Part1, b=d, out=Term3);
+    And(a=Term3_Part1, b=NotD, out=Term3);
 
-    // Term 4: a ∧ b ∧ ¬c ∧ ¬d
+    // Term 4: ABC'D'
     And(a=a, b=b, out=Term4_Part1);
     And(a=Term4_Part1, b=NotC, out=Term4_Part2);
     And(a=Term4_Part2, b=NotD, out=Term4);
