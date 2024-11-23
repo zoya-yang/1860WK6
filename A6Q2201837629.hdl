@@ -1,29 +1,26 @@
 CHIP A6Q2201837629 {
-    IN a, b, c, d;
-    OUT f;
+    IN a, b, c, d;  // Inputs: 4-bit binary
+    OUT f;          // Output: Function f
 
     PARTS:
-    // Step 1: Negate inputs
-    Not(in=a, out=Nota);
-    Not(in=b, out=Notb);
-    Not(in=c, out=Notc);
-    Not(in=d, out=Notd);
+    // NOT gates for negations
+    Not(in=a, out=NotA);
+    Not(in=b, out=NotB);
+    Not(in=c, out=NotC);
+    Not(in=d, out=NotD);
 
-    // Step 2: Compute intermediate terms
-    And(a=Nota, b=d, out=And1);     // ¬a ∧ d
-    And(a=Nota, b=c, out=And2);     // ¬a ∧ c
-    And(a=a, b=d, out=And3);        // a ∧ d
-    And(a=a, b=c, out=And4);        // a ∧ c
-    Or(a=And1, b=And2, out=part1); // ¬a ∧ d ∨ ¬a ∧ c
-    Or(a=And3, b=And4, out=part2); // a ∧ d ∨ a ∧ c
-    Or(a=part1, b=part2, out=part3); // Combine all (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
-    And(a=Notb, b=part3, out=part4); // ¬b ∧ (¬a ∧ d ∨ ¬a ∧ c ∨ a ∧ d ∨ a ∧ c)
+    // AND gates for each minterm
+    And(a=NotA, b=NotB, c=NotC, d=d, out=M1);  // Minterm 1: ¬a ∧ ¬b ∧ ¬c ∧ d
+    And(a=NotA, b=NotB, c=c, d=NotD, out=M2);  // Minterm 2: ¬a ∧ ¬b ∧ c ∧ ¬d
+    And(a=NotA, b=NotB, c=c, d=d, out=M3);     // Minterm 3: ¬a ∧ ¬b ∧ c ∧ d
+    And(a=a, b=NotB, c=NotC, d=d, out=M9);     // Minterm 9: a ∧ ¬b ∧ ¬c ∧ d
+    And(a=a, b=NotB, c=c, d=NotD, out=M10);    // Minterm 10: a ∧ ¬b ∧ c ∧ ¬d
+    And(a=a, b=b, c=NotC, d=NotD, out=M12);    // Minterm 12: a ∧ b ∧ ¬c ∧ ¬d
 
-    // Step 3: Compute last term (a ∧ b ∧ ¬c ∧ ¬d)
-    And(a=a, b=b, out=And5);
-    And(a=And5, b=Notc, out=And6);
-    And(a=And6, b=Notd, out=And7); // a ∧ b ∧ ¬c ∧ ¬d
-
-    // Step 4: Combine results
-    Or(a=part4, b=And7, out=f);    // Final output: f = part4 ∨ And7
+    // OR gates to combine all minterms
+    Or(a=M1, b=M2, out=Partial1);
+    Or(a=Partial1, b=M3, out=Partial2);
+    Or(a=Partial2, b=M9, out=Partial3);
+    Or(a=Partial3, b=M10, out=Partial4);
+    Or(a=Partial4, b=M12, out=f);  // Final output
 }
