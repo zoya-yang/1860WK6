@@ -11,7 +11,7 @@ CHIP A6Q2201837629 {
 
     // AND gates for each term
     // Term 1: A'B'D
-    And(a=NotA, b=NotB, out=Term1_Part1)：
+    And(a=NotA, b=NotB, out=Term1_Part1)
     And(a=Term1_Part1, b=d, out=Term1);
 
     // Term 2: B'C'D
