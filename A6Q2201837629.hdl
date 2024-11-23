@@ -1,19 +1,34 @@
 CHIP A6Q2201837629 {
-    IN a, b, c, d;  // Inputs: 4-bit binary
-    OUT f;          // Output: Function f
+    IN a, b, c, d;  // Inputs: 4-bit binary variables
+    OUT f;          // Output: Boolean function f
 
     PARTS:
-    // NOT gates
+    // NOT gates for negated inputs
     Not(in=a, out=NotA);
     Not(in=b, out=NotB);
     Not(in=c, out=NotC);
     Not(in=d, out=NotD);
 
-    // AND gates
-    // Example: Combine three inputs (¬a ∧ ¬b ∧ ¬c)
-    And(a=NotA, b=NotB, out=Partial1);  // Line 14
-    And(a=Partial1, b=NotC, out=Partial2);
+    // AND gates for each term
+    // Term 1: ¬a ∧ ¬b ∧ d
+    And(a=NotA, b=NotB, out=Term1_Part1);
+    And(a=Term1_Part1, b=d, out=Term1);
 
-    // Final output
-    Or(a=Partial2, b=d, out=f);
+    // Term 2: ¬b ∧ c ∧ ¬d
+    And(a=NotB, b=c, out=Term2_Part1);
+    And(a=Term2_Part1, b=NotD, out=Term2);
+
+    // Term 3: ¬b ∧ c ∧ d
+    And(a=NotB, b=c, out=Term3_Part1);
+    And(a=Term3_Part1, b=d, out=Term3);
+
+    // Term 4: a ∧ b ∧ ¬c ∧ ¬d
+    And(a=a, b=b, out=Term4_Part1);
+    And(a=Term4_Part1, b=NotC, out=Term4_Part2);
+    And(a=Term4_Part2, b=NotD, out=Term4);
+
+    // OR gates to combine all terms
+    Or(a=Term1, b=Term2, out=PartialOr1);
+    Or(a=PartialOr1, b=Term3, out=PartialOr2);
+    Or(a=PartialOr2, b=Term4, out=f);  // Final output
 }
