@@ -3,47 +3,17 @@ CHIP A6Q2201837629 {
     OUT f;          // Output: Function f
 
     PARTS:
-    // NOT gates for negations
+    // NOT gates
     Not(in=a, out=NotA);
     Not(in=b, out=NotB);
     Not(in=c, out=NotC);
     Not(in=d, out=NotD);
 
-    // AND gates for each minterm
-    // Minterm 1: ¬a ∧ ¬b ∧ ¬c ∧ d
-    And(a=NotA, b=NotB, out=PartialM1_1)
-    And(a=PartialM1_1, b=NotC, out=PartialM1_2);
-    And(a=PartialM1_2, b=d, out=M1);
+    // AND gates
+    // Example: Combine three inputs (¬a ∧ ¬b ∧ ¬c)
+    And(a=NotA, b=NotB, out=Partial1);  // Line 14
+    And(a=Partial1, b=NotC, out=Partial2);
 
-    // Minterm 2: ¬a ∧ ¬b ∧ c ∧ ¬d
-    And(a=NotA, b=NotB, out=PartialM2_1);
-    And(a=PartialM2_1, b=c, out=PartialM2_2);
-    And(a=PartialM2_2, b=NotD, out=M2);
-
-    // Minterm 3: ¬a ∧ ¬b ∧ c ∧ d
-    And(a=NotA, b=NotB, out=PartialM3_1);
-    And(a=PartialM3_1, b=c, out=PartialM3_2);
-    And(a=PartialM3_2, b=d, out=M3);
-
-    // Minterm 9: a ∧ ¬b ∧ ¬c ∧ d
-    And(a=a, b=NotB, out=PartialM9_1);
-    And(a=PartialM9_1, b=NotC, out=PartialM9_2);
-    And(a=PartialM9_2, b=d, out=M9);
-
-    // Minterm 10: a ∧ ¬b ∧ c ∧ ¬d
-    And(a=a, b=NotB, out=PartialM10_1);
-    And(a=PartialM10_1, b=c, out=PartialM10_2);
-    And(a=PartialM10_2, b=NotD, out=M10);
-
-    // Minterm 12: a ∧ b ∧ ¬c ∧ ¬d
-    And(a=a, b=b, out=PartialM12_1);
-    And(a=PartialM12_1, b=NotC, out=PartialM12_2);
-    And(a=PartialM12_2, b=NotD, out=M12);
-
-    // OR gates to combine all minterms
-    Or(a=M1, b=M2, out=PartialOr1);
-    Or(a=PartialOr1, b=M3, out=PartialOr2);
-    Or(a=PartialOr2, b=M9, out=PartialOr3);
-    Or(a=PartialOr3, b=M10, out=PartialOr4);
-    Or(a=PartialOr4, b=M12, out=f);  // Final output
+    // Final output
+    Or(a=Partial2, b=d, out=f);
 }
