@@ -11,21 +11,21 @@ CHIP A6Q2201837629 {
 
     // AND gates for each term
     // Term 1: A'B'D
-    And(a=NotA, b=NotB, out=Term1_Part1); 
-    And(a=Term1_Part1, b=d, out=Term1);
+    And(a=NotA, b=NotB, out=Term1Part1); 
+    And(a=Term1Part1, b=d, out=Term1);
 
     // Term 2: B'C'D
-    And(a=NotB, b=NotC, out=Term2_Part1);
-    And(a=Term2_Part1, b=d, out=Term2);
+    And(a=NotB, b=NotC, out=Term2Part1);
+    And(a=Term2Part1, b=d, out=Term2);
 
     // Term 3: B'CD'
-    And(a=NotB, b=c, out=Term3_Part1);
-    And(a=Term3_Part1, b=NotD, out=Term3);
+    And(a=NotB, b=c, out=Term3Part1);
+    And(a=Term3Part1, b=NotD, out=Term3);
 
     // Term 4: ABC'D'
     And(a=a, b=b, out=Term4_Part1);
-    And(a=Term4_Part1, b=NotC, out=Term4_Part2);
-    And(a=Term4_Part2, b=NotD, out=Term4);
+    And(a=Term4Part1, b=NotC, out=Term4Part2);
+    And(a=Term4Part2, b=NotD, out=Term4);
 
     // OR gates to combine all terms
     Or(a=Term1, b=Term2, out=PartialOr1);
