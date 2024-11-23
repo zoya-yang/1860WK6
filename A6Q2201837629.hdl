@@ -23,7 +23,7 @@ CHIP A6Q2201837629 {
     And(a=Term3Part1, b=NotD, out=Term3);
 
     // Term 4: ABC'D'
-    And(a=a, b=b, out=Term4_Part1);
+    And(a=a, b=b, out=Term4Part1);
     And(a=Term4Part1, b=NotC, out=Term4Part2);
     And(a=Term4Part2, b=NotD, out=Term4);
 
