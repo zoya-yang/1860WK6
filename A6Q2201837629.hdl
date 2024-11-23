@@ -10,17 +10,40 @@ CHIP A6Q2201837629 {
     Not(in=d, out=NotD);
 
     // AND gates for each minterm
-    And(a=NotA, b=NotB, c=NotC, d=d, out=M1);  // Minterm 1: ¬a ∧ ¬b ∧ ¬c ∧ d
-    And(a=NotA, b=NotB, c=c, d=NotD, out=M2);  // Minterm 2: ¬a ∧ ¬b ∧ c ∧ ¬d
-    And(a=NotA, b=NotB, c=c, d=d, out=M3);     // Minterm 3: ¬a ∧ ¬b ∧ c ∧ d
-    And(a=a, b=NotB, c=NotC, d=d, out=M9);     // Minterm 9: a ∧ ¬b ∧ ¬c ∧ d
-    And(a=a, b=NotB, c=c, d=NotD, out=M10);    // Minterm 10: a ∧ ¬b ∧ c ∧ ¬d
-    And(a=a, b=b, c=NotC, d=NotD, out=M12);    // Minterm 12: a ∧ b ∧ ¬c ∧ ¬d
+    // Minterm 1: ¬a ∧ ¬b ∧ ¬c ∧ d
+    And(a=NotA, b=NotB, out=Partial1_1);
+    And(a=Partial1_1, b=NotC, out=Partial1_2);
+    And(a=Partial1_2, b=d, out=M1);
+
+    // Minterm 2: ¬a ∧ ¬b ∧ c ∧ ¬d
+    And(a=NotA, b=NotB, out=Partial2_1);
+    And(a=Partial2_1, b=c, out=Partial2_2);
+    And(a=Partial2_2, b=NotD, out=M2);
+
+    // Minterm 3: ¬a ∧ ¬b ∧ c ∧ d
+    And(a=NotA, b=NotB, out=Partial3_1);
+    And(a=Partial3_1, b=c, out=Partial3_2);
+    And(a=Partial3_2, b=d, out=M3);
+
+    // Minterm 9: a ∧ ¬b ∧ ¬c ∧ d
+    And(a=a, b=NotB, out=Partial9_1);
+    And(a=Partial9_1, b=NotC, out=Partial9_2);
+    And(a=Partial9_2, b=d, out=M9);
+
+    // Minterm 10: a ∧ ¬b ∧ c ∧ ¬d
+    And(a=a, b=NotB, out=Partial10_1);
+    And(a=Partial10_1, b=c, out=Partial10_2);
+    And(a=Partial10_2, b=NotD, out=M10);
+
+    // Minterm 12: a ∧ b ∧ ¬c ∧ ¬d
+    And(a=a, b=b, out=Partial12_1);
+    And(a=Partial12_1, b=NotC, out=Partial12_2);
+    And(a=Partial12_2, b=NotD, out=M12);
 
     // OR gates to combine all minterms
-    Or(a=M1, b=M2, out=Partial1);
-    Or(a=Partial1, b=M3, out=Partial2);
-    Or(a=Partial2, b=M9, out=Partial3);
-    Or(a=Partial3, b=M10, out=Partial4);
-    Or(a=Partial4, b=M12, out=f);  // Final output
+    Or(a=M1, b=M2, out=PartialOr1);
+    Or(a=PartialOr1, b=M3, out=PartialOr2);
+    Or(a=PartialOr2, b=M9, out=PartialOr3);
+    Or(a=PartialOr3, b=M10, out=PartialOr4);
+    Or(a=PartialOr4, b=M12, out=f);  // Final output
 }
