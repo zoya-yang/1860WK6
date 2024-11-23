@@ -1,5 +1,5 @@
 CHIP A6Q2201837629 {
-    IN a, b, c, d;  // Inputs: 4-bit binary variables
+    IN a, b, c, d;  // Inputs: 4-bit binary
     OUT f;          // Output: Boolean function f
 
     PARTS:
